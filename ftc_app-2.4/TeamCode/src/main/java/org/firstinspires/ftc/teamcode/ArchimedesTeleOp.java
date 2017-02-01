@@ -72,8 +72,12 @@ public class ArchimedesTeleOp extends Archimedes
 
             if (gamepad1.right_stick_y == 0)
                 rightMotorPower = 0;
+            else if (gamepad1.right_stick_y < 0)
+                rightMotorPower = rightMotorPower * -1;
             if (gamepad1.left_stick_y == 0)
                 leftMotorPower = 0;
+            else if (gamepad1.left_stick_y < 0)
+                leftMotorPower = leftMotorPower * -1;
 
             if (gamepad1.start)
             {
