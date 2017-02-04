@@ -14,7 +14,7 @@ public class ArchimedesTeleOp extends Archimedes
         double rightMotorPower;
         double leftMotorPower;
 
-        boolean isDriveControlsReversed = false;
+        boolean isDriveControlsInReverse = false;
 
         initializeArchimedes();
         waitForStart();
@@ -23,9 +23,9 @@ public class ArchimedesTeleOp extends Archimedes
         while (opModeIsActive())
         {
             boolean isRobotTurning = (getLeftDriveMotor().getPower() > 0 &&
-                    getRightDriveMotor().getPower() < 0) ||
+                    getRightDriveMotor().getPower() <= 0) ||
                     (getRightDriveMotor().getPower() > 0 && getLeftDriveMotor
-                            ().getPower() < 0);
+                            ().getPower() <= 0);
 
             if (gamepad1.right_bumper)
             {
@@ -74,6 +74,7 @@ public class ArchimedesTeleOp extends Archimedes
                 rightMotorPower = 0;
             else if (gamepad1.right_stick_y < 0)
                 rightMotorPower = rightMotorPower * -1;
+
             if (gamepad1.left_stick_y == 0)
                 leftMotorPower = 0;
             else if (gamepad1.left_stick_y < 0)
@@ -81,7 +82,7 @@ public class ArchimedesTeleOp extends Archimedes
 
             if (gamepad1.start)
             {
-                isDriveControlsReversed = !isDriveControlsReversed;
+                isDriveControlsInReverse = !isDriveControlsInReverse;
                 while (gamepad1.start)
                 {
                     idle();
@@ -126,7 +127,7 @@ public class ArchimedesTeleOp extends Archimedes
 
             setLiftPower(gamepad2.right_stick_y);
 
-            if (isDriveControlsReversed)
+            if (isDriveControlsInReverse)
             {
                 getRightDriveMotor().setPower(rightMotorPower);
                 getLeftDriveMotor().setPower(leftMotorPower);

@@ -29,7 +29,7 @@ public class RedAutonomous2 extends Archimedes
             // around and park.
             drive(1.00, 500);
             turn(1.00, -135);
-            timeDrive(-0.65, 1000);
+            timeDrive(-0.65, 1500);
         }
     }
 }

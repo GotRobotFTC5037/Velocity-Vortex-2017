@@ -29,7 +29,7 @@ public class BlueAutonomous3 extends Archimedes
             // around and park.
             drive(1.00, 300);
             turn(1.00, 160);
-            timeDrive(-0.65, 1000);
+            timeDrive(-0.65, 1500);
         }
     }
 }

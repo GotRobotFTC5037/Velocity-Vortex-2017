@@ -31,8 +31,8 @@ public class RedAutonomous1 extends Archimedes
             stopBallLauncher();
 
             // Turn toward the beacon line, drive to it and then turn into it.
-            turn(0.40, -42);
-            driveToLine(0.85, DEFAULT_LINE_THRESHOLD, 1250, 65);
+            turn(0.75, -42);
+            driveToLine(0.85, DEFAULT_LINE_THRESHOLD, 1250, 75);
             turn(0.40, -48);
 
             // This is needed to expose the color sensor
@@ -47,11 +47,11 @@ public class RedAutonomous1 extends Archimedes
 
                 // Detect if the robot is lined up with the beacon, if it is
                 // then detect what color is the red one and press it
-                telemetry.addData("Left", leftOds.getLightDetected());
-                telemetry.addData("Right", rightOds.getLightDetected());
-                telemetry.update();
                 if (isAlignedWithBeacon())
                 {
+                    if(isColorSensorError())
+                        stop(); // Hammer time
+
                     if (isDetectingRedOnRight())
                     {
                         turnButtonPusherRight();
@@ -64,6 +64,9 @@ public class RedAutonomous1 extends Archimedes
                     // blue, wait 5 seconds and press the beacon again.
                     turnButtonPusherLeft();
                     sleep(1000);
+
+                    if(isColorSensorError())
+                        stop(); // Hammer time
 
                     if (isDetectingBlueOnRight())
                     {
@@ -85,7 +88,7 @@ public class RedAutonomous1 extends Archimedes
             // Turn toward the second line, drive towards it and turn into
             // the line.
             turn(0.65, 90);
-            driveToLine(0.85, DEFAULT_LINE_THRESHOLD, 1050, 100);
+            driveToLine(0.85, DEFAULT_LINE_THRESHOLD, 1050, 150);
             turn(.65, -90);
 
             // This is needed to expose the color sensor
@@ -96,31 +99,40 @@ public class RedAutonomous1 extends Archimedes
             {
                 // Follow the line up to the beacon.
                 followLineToWall(0.20, 12);
+                sleep(500);
+
+                if(isColorSensorError())
+                    stop(); // Hammer time
 
                 // Detect if the robot is lined up with the beacon, if it is then
                 // detect what color is the red one and press it
                 if (isAlignedWithBeacon())
                 {
-                    sleep(500);
+                    if(isColorSensorError())
+                        stop(); // Hammer time
+
                     if (isDetectingRedOnRight())
                     {
                         turnButtonPusherRight();
                         sleep(500);
                     }
                     timeDrive(.5, 500);
-                    drive(.5, -70);
+                    drive(.5, -120);
 
                     // As a safety feature, check the color of the beacon, if it is
                     // blue, wait 5 seconds and press the beacon again.
                     turnButtonPusherLeft();
                     sleep(1000);
 
+                    if(isColorSensorError())
+                        stop(); // Hammer time
+
                     if (isDetectingBlueOnRight())
                     {
                         setButtonPusherToNeutral();
                         sleep(5000);
                         timeDrive(.5, 500);
-                        drive(.5, -70);
+                        drive(.5, -120);
                         stop();
                     }
 
@@ -128,7 +140,7 @@ public class RedAutonomous1 extends Archimedes
                 }
                 else
                 {
-                    drive(.5, -275);
+                    drive(.5, -270);
                 }
             }
         }
