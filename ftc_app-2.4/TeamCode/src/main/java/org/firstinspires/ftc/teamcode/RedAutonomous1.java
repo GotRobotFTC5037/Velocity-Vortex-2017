@@ -31,9 +31,9 @@ public class RedAutonomous1 extends Archimedes
             stopBallLauncher();
 
             // Turn toward the beacon line, drive to it and then turn into it.
-            turn(0.75, -42);
-            driveToLine(0.85, DEFAULT_LINE_THRESHOLD, 1250, 75);
-            turn(0.40, -48);
+            turn(0.45, -42);
+            driveToLine(0.85, DEFAULT_LINE_THRESHOLD, 1225, 75);
+            turn(0.45, -48);
 
             // This is needed to expose the color sensor
             turnButtonPusherLeft();
@@ -87,9 +87,9 @@ public class RedAutonomous1 extends Archimedes
 
             // Turn toward the second line, drive towards it and turn into
             // the line.
-            turn(0.65, 90);
+            turn(0.75, 90);
             driveToLine(0.85, DEFAULT_LINE_THRESHOLD, 1050, 150);
-            turn(.65, -90);
+            turn(.60, -90);
 
             // This is needed to expose the color sensor
             turnButtonPusherLeft();
