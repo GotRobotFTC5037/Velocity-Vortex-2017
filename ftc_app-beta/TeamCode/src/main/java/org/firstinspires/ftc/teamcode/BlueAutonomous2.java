@@ -17,7 +17,7 @@ public class BlueAutonomous2 extends Archimedes
         {
             // Launch balls into center vortex.
             startBallLauncherAtLowPower();
-            drive(1.00, 300);
+            drive(1.00, 300, 300);
             sleep(1500);
             launchBall(1000);
             sleep(1500);
@@ -27,7 +27,7 @@ public class BlueAutonomous2 extends Archimedes
 
             // Drive towards the center vortex, knock off the cap ball, turn
             // around and park.
-            drive(1.00, 500);
+            drive(1.00, 500, 500);
             turn(1.00, 175);
             timeDrive(-0.65, 1500);
         }
