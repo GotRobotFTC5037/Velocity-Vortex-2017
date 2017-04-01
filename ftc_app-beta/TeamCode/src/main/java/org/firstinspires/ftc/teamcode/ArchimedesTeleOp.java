@@ -28,54 +28,41 @@ public class ArchimedesTeleOp extends Archimedes
             final boolean isTurning = isTurningLeft || isTurningRight;
 
             final double maximumDriveSpeed = (1 - MAXIMUM_SLOW_POWER_DRIVE) *
-                    Math.pow(getLiftPosition() / MAXIMUM_LIFT_HEIGHT, 2) +
+                    Math.pow(1 - (getLiftPosition() / MAXIMUM_LIFT_HEIGHT), 2) +
                     MAXIMUM_SLOW_POWER_DRIVE;
 
-            final double maximumTurnSpeed = (1 - MAXIMUM_SLOW_POWER_TURN) * Math
-                    .pow(getLiftPosition() / MAXIMUM_LIFT_HEIGHT, 2) +
+            final double maximumTurnSpeed = (1 - MAXIMUM_SLOW_POWER_TURN) *
+                    Math.pow(1 - (getLiftPosition() / MAXIMUM_LIFT_HEIGHT), 2) +
                     MAXIMUM_SLOW_POWER_TURN;
 
             if (gamepad1.right_bumper)
             {
                 rightMotorPower = isTurning ?
-                        ((1 - MINIMUM_TURN_POWER) -
-                                (1 - MAXIMUM_SLOW_POWER_TURN)) *
-                                Math.pow(gamepad1.right_stick_y, 2) +
-                                MINIMUM_TURN_POWER :
-                        ((1 - MINIMUM_DRIVE_POWER) -
-                                (1 - MAXIMUM_SLOW_POWER_DRIVE)) *
-                                Math.pow(gamepad1.right_stick_y, 2) +
-                                MINIMUM_DRIVE_POWER;
+                        ((1 - MINIMUM_TURN_POWER) - (1 - MAXIMUM_SLOW_POWER_TURN)) *
+                                Math.pow(gamepad1.right_stick_y, 2) + MINIMUM_TURN_POWER :
+                        ((1 - MINIMUM_DRIVE_POWER) - (1 - MAXIMUM_SLOW_POWER_DRIVE)) *
+                                Math.pow(gamepad1.right_stick_y, 2) + MINIMUM_DRIVE_POWER;
 
                 leftMotorPower = isTurning ?
-                        ((1 - MINIMUM_DRIVE_POWER) -
-                                (1 - MAXIMUM_SLOW_POWER_DRIVE)) *
-                                Math.pow(gamepad1.left_stick_y, 2) +
-                                MINIMUM_TURN_POWER :
-                        ((1 - MINIMUM_DRIVE_POWER) -
-                                (1 - MAXIMUM_SLOW_POWER_DRIVE)) *
-                                Math.pow(gamepad1
-                                        .left_stick_y, 2) +
-                                MINIMUM_DRIVE_POWER;
+                        ((1 - MINIMUM_DRIVE_POWER) - (1 - MAXIMUM_SLOW_POWER_DRIVE)) *
+                                Math.pow(gamepad1.left_stick_y, 2) + MINIMUM_TURN_POWER :
+                        ((1 - MINIMUM_DRIVE_POWER) - (1 - MAXIMUM_SLOW_POWER_DRIVE)) *
+                                Math.pow(gamepad1.left_stick_y, 2) + MINIMUM_DRIVE_POWER;
 
             }
             else
             {
                 rightMotorPower = isTurning ?
                         ((1 - MINIMUM_TURN_POWER) - (1 - maximumTurnSpeed)) *
-                                Math.pow(gamepad1.right_stick_y, 2) +
-                                MINIMUM_TURN_POWER :
+                                Math.pow(gamepad1.right_stick_y, 2) + MINIMUM_TURN_POWER :
                         ((1 - MINIMUM_DRIVE_POWER) - (1 - maximumDriveSpeed)) *
-                                Math.pow(gamepad1.right_stick_y, 2) +
-                                MINIMUM_DRIVE_POWER;
+                                Math.pow(gamepad1.right_stick_y, 2) + MINIMUM_DRIVE_POWER;
 
                 leftMotorPower = isTurning ?
                         ((1 - MINIMUM_TURN_POWER) - (1 - maximumTurnSpeed)) *
-                                Math.pow(gamepad1.left_stick_y, 2) +
-                                MINIMUM_TURN_POWER :
+                                Math.pow(gamepad1.left_stick_y, 2) + MINIMUM_TURN_POWER :
                         ((1 - MINIMUM_DRIVE_POWER) - (1 - maximumDriveSpeed)) *
-                                Math.pow(gamepad1.left_stick_y, 2) +
-                                MINIMUM_DRIVE_POWER;
+                                Math.pow(gamepad1.left_stick_y, 2) + MINIMUM_DRIVE_POWER;
             }
 
             if (gamepad1.right_stick_y == 0)
@@ -116,9 +103,9 @@ public class ArchimedesTeleOp extends Archimedes
             else
                 stopBallCollector();
 
-            if (isGrabberDeployed ? (gamepad2.dpad_up &&
-                    rightMotorPower == 0 && leftMotorPower
-                    == 0) : gamepad1.x && gamepad2.dpad_up)
+            if (isGrabberDeployed ?
+                    (gamepad2.dpad_up && rightMotorPower == 0 && leftMotorPower == 0) :
+                    gamepad1.x && gamepad2.dpad_up)
             {
                 isGrabberDeployed = true;
                 liftCapBallGrabber();
@@ -142,9 +129,7 @@ public class ArchimedesTeleOp extends Archimedes
 
             if (isGrabberDeployed)
             {
-                setLiftPower(gamepad2.right_stick_y);
-                telemetry.addData("Lift", getLiftPosition());
-                telemetry.update();
+                setLiftPower(-gamepad2.right_stick_y);
             }
 
             if (isControlsReversed)

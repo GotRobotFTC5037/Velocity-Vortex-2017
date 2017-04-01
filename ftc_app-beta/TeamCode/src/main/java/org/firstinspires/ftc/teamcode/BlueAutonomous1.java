@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
  *
  * @author got robot?
  */
-@SuppressWarnings({"OverlyLongMethod", "OverlyComplexMethod"})
+@SuppressWarnings({"OverlyLongMethod", "OverlyComplexMethod", "MagicNumber"})
 @Autonomous(name = "Blue: Beacons", group = "Blue")
 public class BlueAutonomous1 extends Archimedes
 {
@@ -25,16 +25,22 @@ public class BlueAutonomous1 extends Archimedes
             // Launch balls into center vortex.
             startBallLauncherAtLowPower();
             drive(1.00, 300, 100);
+            idle();
             sleep(1400);
             launchBall(750);
+            idle();
             sleep(1000);
             launchBall(750);
             stopBallLauncher();
+            idle();
 
             // Turn toward the beacon line, drive to it and then turn into it.
             turn(0.80, 45);
-            driveToLine(1, DEFAULT_LINE_THRESHOLD, 1500, 600, 75);
-            turn(0.60, 45);
+            idle();
+            driveToLine(1.00, DEFAULT_LINE_THRESHOLD, 1550, 500, POST_LINE_DISTANCE_BLUE);
+            idle();
+            turn(0.50, 45);
+            idle();
 
             // This is needed to expose the color sensor
             turnButtonPusherLeft();
@@ -44,39 +50,41 @@ public class BlueAutonomous1 extends Archimedes
             {
                 // Follow the line up to the beacon.
                 followLineToWall(0.2, DEFAULT_WALL_DISTANCE);
+                idle();
                 correctHeading(0.35, 6);
-                sleep(500);
+                idle();
 
-                // Detect if the robot is lined up with the beacon, if it is
-                // then detect what color is the red one and press it
+                // Detect if the robot is lined up with the beacon
                 if (isAlignedWithBeacon())
                 {
-                    if(hasColorSensorError())
-                        stop(); // Hammer time
-
+                    // Detects what color is red
                     if (isDetectingBlueOnRight())
                     {
                         turnButtonPusherRight();
                         sleep(500);
                     }
-                    timeDrive(0.50, 500);
-                    drive(0.50, -60, 60);
+                    pressBeaconButton(0.5, 500);
+                    drive(0.50, -60, 0);
 
-                    // As a safety feature, check the color of the beacon, if it is
-                    // blue, wait 5 seconds and press the beacon again.
+                    // Check the color of the beacon, if it is blue, wait 5 seconds and press the
+                    // beacon again.
                     turnButtonPusherLeft();
-                    sleep(1000);
+                    idle();
+                    sleep(500);
 
-                    if(hasColorSensorError())
-                        stop(); // Hammer time
-
-                    if (isDetectingRedOnRight())
+                    while (isDetectingRedOnRight())
                     {
+                        // Wait and press button
                         setButtonPusherToNeutral();
+                        idle();
                         sleep(5000);
                         pressBeaconButton(0.5, 500);
-                        drive(0.50, -60, 20);
-                        stop();
+                        drive(0.50, -60, 0);
+
+                        // Setup to check for errors again
+                        turnButtonPusherLeft();
+                        idle();
+                        sleep(1000);
                     }
 
                     isFirstBeaconPressed = true;
@@ -89,10 +97,10 @@ public class BlueAutonomous1 extends Archimedes
 
             // Turn toward the second line, drive towards it and turn into
             // the line.
-            drive(0.50, -60, 60);
-            turn(0.80, -90);
-            driveToLine(1, DEFAULT_LINE_THRESHOLD, 1050, 600, 140);
-            turn(0.60, 90);
+            drive(0.50, -100, 50);
+            turn(0.65, -90);
+            driveToLine(1, DEFAULT_LINE_THRESHOLD, 1175, 500, POST_LINE_DISTANCE_BLUE);
+            turn(0.50, 90);
 
             // This is needed to expose the color sensor
             turnButtonPusherLeft();
@@ -101,52 +109,52 @@ public class BlueAutonomous1 extends Archimedes
             while (!isSecondBeaconPressed && opModeIsActive())
             {
                 // Follow the line up to the beacon.
-                followLineToWall(0.20, DEFAULT_WALL_DISTANCE);
+                followLineToWall(0.2, DEFAULT_WALL_DISTANCE);
+                idle();
                 correctHeading(0.35, 6);
-                sleep(500);
+                idle();
 
-                if(hasColorSensorError())
-                    stop(); // Hammer time
-
-                // Detect if the robot is lined up with the beacon, if it is then
-                // detect what color is the red one and press it
+                // Detect if the robot is lined up with the beacon
                 if (isAlignedWithBeacon())
                 {
-                    if(hasColorSensorError())
-                        stop(); // Hammer time
-
+                    // Detects what color is red
                     if (isDetectingBlueOnRight())
                     {
                         turnButtonPusherRight();
                         sleep(500);
                     }
-                    timeDrive(.5, 500);
-                    drive(.5, -60, 60);
+                    pressBeaconButton(0.5, 500);
+                    drive(0.50, -60, 0);
 
-                    // As a safety feature, check the color of the beacon, if it is
-                    // blue, wait 5 seconds and press the beacon again.
+                    // Check the color of the beacon, if it is blue, wait 5 seconds and press the
+                    // beacon again.
                     turnButtonPusherLeft();
-                    sleep(1000);
+                    idle();
+                    sleep(500);
 
-                    if(hasColorSensorError())
-                        stop(); // Hammer time
-
-                    if (isDetectingRedOnRight())
+                    while (isDetectingRedOnRight())
                     {
+                        // Wait and press button
                         setButtonPusherToNeutral();
+                        idle();
                         sleep(5000);
                         pressBeaconButton(0.5, 500);
-                        drive(.5, -60, 20);
-                        stop();
+                        drive(0.50, -60, 0);
+
+                        // Setup to check for errors again
+                        turnButtonPusherLeft();
+                        idle();
+                        sleep(1000);
                     }
 
                     isSecondBeaconPressed = true;
                 }
                 else
                 {
-                    drive(.5, -270, 270);
+                    drive(0.50, -270, 270);
                 }
             }
+            drive(0.50, -100, 50);
         }
     }
 }
