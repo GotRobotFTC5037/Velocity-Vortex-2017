@@ -1,8 +1,10 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 @Autonomous(name = "Blue: Parking", group = "Blue")
+@Disabled
 public class BlueAutonomous2 extends Archimedes
 {
     @Override

@@ -100,7 +100,7 @@ public class SensorMRColor extends LinearOpMode {
       // check for button state transitions.
       if ((bCurrState == true) && (bCurrState != bPrevState))  {
 
-        // button is transitioning to a pressed state. So Toggle LED7
+        // button is transitioning to a pressed state. So Toggle LED
         bLedOn = !bLedOn;
         colorSensor.enableLed(bLedOn);
       }

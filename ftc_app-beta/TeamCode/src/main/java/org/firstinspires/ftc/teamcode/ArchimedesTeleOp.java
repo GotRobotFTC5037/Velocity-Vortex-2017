@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-@SuppressWarnings({"OverlyComplexMethod", "OverlyLongMethod"})
 @TeleOp(name = "TeleOp")
 public class ArchimedesTeleOp extends Archimedes
 {
@@ -119,13 +118,13 @@ public class ArchimedesTeleOp extends Archimedes
                 dropCapBallGrabber();
 
             if (gamepad2.b)
-                turnButtonPusherRight();
+                setButtonPusherPosition(ButtonPusherPosition.RIGHT_POSITION);
 
             if (gamepad2.x)
-                turnButtonPusherLeft();
+                setButtonPusherPosition(ButtonPusherPosition.LEFT_POSITION);
 
             if (gamepad2.a || gamepad2.y)
-                setButtonPusherToNeutral();
+                setButtonPusherPosition(ButtonPusherPosition.NEUTRAL_POSITION);
 
             if (isGrabberDeployed)
             {
