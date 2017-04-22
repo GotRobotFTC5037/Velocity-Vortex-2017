@@ -1,11 +1,9 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 @Autonomous(name = "Red: Parking", group = "Red")
-@Disabled
-public class RedAutonomous2 extends Archimedes
+public class RedParking extends Archimedes
 {
     @Override
     public void runOpMode() throws InterruptedException
@@ -17,18 +15,10 @@ public class RedAutonomous2 extends Archimedes
 
         if (opModeIsActive())
         {
-            // Launch balls into center vortex.
-            startBallLauncherAtLowPower();
+            startBallLauncher();
             drive(1.00, 300, 300);
-            sleep(1500);
-            launchBall(1000);
-            sleep(1500);
-            launchBall(1000);
-            sleep(1500);
+            launchBalls(2);
             stopBallLauncher();
-
-            // Drive towards the center vortex, knock off the cap ball, turn
-            // around and park.
             drive(1.00, 500, 500);
             turn(1.00, -135);
             timeDrive(-0.65, 1500);

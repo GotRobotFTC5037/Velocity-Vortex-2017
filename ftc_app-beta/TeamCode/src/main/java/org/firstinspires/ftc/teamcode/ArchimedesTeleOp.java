@@ -2,18 +2,25 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.enums.ButtonPusherPosition;
+
 @TeleOp(name = "TeleOp")
 public class ArchimedesTeleOp extends Archimedes
 {
+    private Thread automaticBallLaunchThread;
+
+
+
     @Override
     public void runOpMode() throws InterruptedException
     {
-        boolean isControlsReversed = false;
+        boolean areControlsReversed = false;
         boolean isGrabberDeployed = false;
 
         initializeArchimedes();
         waitForStart();
         startArchimedes();
+        startBallLauncher();
 
         while (opModeIsActive())
         {
@@ -66,17 +73,17 @@ public class ArchimedesTeleOp extends Archimedes
 
             if (gamepad1.right_stick_y == 0)
                 rightMotorPower = 0;
-            else if (gamepad1.right_stick_y < 0)
+            else if (gamepad1.right_stick_y > 0)
                 rightMotorPower *= -1;
 
             if (gamepad1.left_stick_y == 0)
                 leftMotorPower = 0;
-            else if (gamepad1.left_stick_y < 0)
+            else if (gamepad1.left_stick_y > 0)
                 leftMotorPower *= -1;
 
             if (gamepad1.start)
             {
-                isControlsReversed = !isControlsReversed;
+                areControlsReversed = !areControlsReversed;
                 while (gamepad1.start)
                 {
                     idle();
@@ -84,16 +91,73 @@ public class ArchimedesTeleOp extends Archimedes
             }
 
             // Gunner Controls
-            if (gamepad2.right_trigger > 0 && rightMotorPower == 0 &&
-                    leftMotorPower == 0)
-                liftBallDeployer();
-            else
-                dropBallDeployer();
+            if (gamepad2.right_trigger == 1.0)
+            {
+                if (automaticBallLaunchThread == null)
+                {
+                    automaticBallLaunchThread = new Thread(new Runnable()
+                    {
+                        @Override public void run()
+                        {
+                            BallLauncherSpeedControlThread.setPriority(Thread.NORM_PRIORITY + 2);
+                            shouldRecordBallLauncherIntergal = false;
+                            while (opModeIsActive())
+                            {
+                                liftBallDeployer();
+                                try
+                                {
+                                    Thread.sleep(BALL_LAUNCH_WAIT_TIME);
+                                }
+                                catch (InterruptedException e)
+                                {
+                                    break;
+                                }
 
-            if (gamepad2.left_trigger > 0)
-                startBallLauncherAtHighPower();
+                                dropBallDeployer();
+                                try
+                                {
+                                    Thread.sleep(POST_LAUNCH_WAIT_TIME);
+                                }
+                                catch (InterruptedException e)
+                                {
+                                    break;
+                                }
+                            }
+
+                            shouldRecordBallLauncherIntergal = true;
+                            BallLauncherSpeedControlThread.setPriority(Thread.NORM_PRIORITY + 1);
+                        }
+                    });
+                }
+
+                if (!automaticBallLaunchThread.isAlive())
+                {
+                    automaticBallLaunchThread.setPriority(Thread.NORM_PRIORITY + 1);
+                    automaticBallLaunchThread.setName("Automatic Ball Launch Thread");
+                    automaticBallLaunchThread.start();
+                }
+            }
+            else if (gamepad2.right_trigger != 1.0 && gamepad2.right_trigger != 0.0)
+            {
+                if (automaticBallLaunchThread != null && automaticBallLaunchThread.isAlive())
+                {
+                    automaticBallLaunchThread.interrupt();
+                    automaticBallLaunchThread.join();
+                    automaticBallLaunchThread = null;
+                }
+
+                liftBallDeployer();
+            }
             else
-                stopBallLauncher();
+            {
+                if (automaticBallLaunchThread != null && automaticBallLaunchThread.isAlive())
+                {
+                    automaticBallLaunchThread.interrupt();
+                    automaticBallLaunchThread.join();
+                    automaticBallLaunchThread = null;
+                }
+                dropBallDeployer();
+            }
 
             if (gamepad2.left_bumper)
                 startBallCollector();
@@ -102,19 +166,14 @@ public class ArchimedesTeleOp extends Archimedes
             else
                 stopBallCollector();
 
-            if (isGrabberDeployed ?
-                    (gamepad2.dpad_up && rightMotorPower == 0 && leftMotorPower == 0) :
-                    gamepad1.x && gamepad2.dpad_up)
+            if ((gamepad2.dpad_up && gamepad1.x) || (gamepad2.dpad_up && (isGrabberDeployed || isEndGameActive())))
             {
                 isGrabberDeployed = true;
                 liftCapBallGrabber();
             }
-
-            if ((gamepad2.dpad_left || gamepad2.dpad_right) &&
-                    isGrabberDeployed)
+            else if ((gamepad2.dpad_left || gamepad2.dpad_right) && isGrabberDeployed)
                 clampCapBallGrabber();
-
-            if (gamepad2.dpad_down)
+            else if (gamepad2.dpad_down)
                 dropCapBallGrabber();
 
             if (gamepad2.b)
@@ -131,16 +190,19 @@ public class ArchimedesTeleOp extends Archimedes
                 setLiftPower(-gamepad2.right_stick_y);
             }
 
-            if (isControlsReversed)
+            if (areControlsReversed)
             {
-                getRightDriveMotor().setPower(rightMotorPower);
-                getLeftDriveMotor().setPower(leftMotorPower);
+                getRightDriveMotor().setPower(-rightMotorPower);
+                getLeftDriveMotor().setPower(-leftMotorPower);
             }
             else
             {
-                getRightDriveMotor().setPower(-leftMotorPower);
-                getLeftDriveMotor().setPower(-rightMotorPower);
+                getRightDriveMotor().setPower(leftMotorPower);
+                getLeftDriveMotor().setPower(rightMotorPower);
             }
         }
+
+        BallLauncherSpeedControlThread.interrupt();
+        BallLauncherSpeedControlThread.join();
     }
 }
