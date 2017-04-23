@@ -2,8 +2,8 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-@Autonomous(name = "Blue: Parking @ Angle", group = "Blue")
-public class BlueParkingAngle extends Archimedes
+@Autonomous(name = "Red: Parking @ Angle w/ Delay", group = "Red")
+public class RedParkingAngleDelay extends Archimedes
 {
     @Override
     public void runOpMode() throws InterruptedException
@@ -16,11 +16,12 @@ public class BlueParkingAngle extends Archimedes
         if (opModeIsActive())
         {
             startBallLauncher();
-            drive(1.00, 600, 600);
+            interruptibleSleep(5000);
+            drive(1.00, 675, 675);
             launchBalls();
             stopBallLauncher();
-            drive(1.00, 300, 300);
-            turn(1.00, 180);
+            drive(1.00, 675, 675);
+            turn(1.00, -115);
             timeDrive(-0.65, 1500);
         }
     }

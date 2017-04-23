@@ -17,7 +17,7 @@ public class BlueParking extends Archimedes
         {
             startBallLauncher();
             drive(1.00, 300, 300);
-            launchBalls(2);
+            launchBalls();
             stopBallLauncher();
             drive(1.00, 500, 500);
             turn(1.00, 175);

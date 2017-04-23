@@ -21,7 +21,7 @@ public class RedBeacons extends Archimedes
         // Launch balls into center vortex.
         startBallLauncher();
         drive(1.00, 300, 300);
-        launchBalls(2);
+        launchBalls();
         stopBallLauncher();
 
         // Turn toward the beacon line, drive to it and then turn into it.

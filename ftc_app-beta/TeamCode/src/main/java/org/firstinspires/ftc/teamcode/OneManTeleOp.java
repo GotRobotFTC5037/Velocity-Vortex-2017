@@ -99,7 +99,9 @@ public class OneManTeleOp extends Archimedes
                         @Override public void run()
                         {
                             BallLauncherSpeedControlThread.setPriority(Thread.NORM_PRIORITY + 2);
-                            shouldRecordBallLauncherIntergal = false;
+                            shouldRecordBallLauncherIntegral = false;
+                            startBallCollector();
+
                             while (opModeIsActive())
                             {
                                 liftBallDeployer();
@@ -123,7 +125,8 @@ public class OneManTeleOp extends Archimedes
                                 }
                             }
 
-                            shouldRecordBallLauncherIntergal = true;
+                            stopBallCollector();
+                            shouldRecordBallLauncherIntegral = true;
                             BallLauncherSpeedControlThread.setPriority(Thread.NORM_PRIORITY + 1);
                         }
                     });
@@ -138,6 +141,7 @@ public class OneManTeleOp extends Archimedes
             }
             else if (gamepad1.right_trigger != 1.0 && gamepad1.right_trigger != 0.0)
             {
+                startBallCollector();
                 if (automaticBallLaunchThread != null && automaticBallLaunchThread.isAlive())
                 {
                     automaticBallLaunchThread.interrupt();
@@ -149,6 +153,7 @@ public class OneManTeleOp extends Archimedes
             }
             else
             {
+                stopBallCollector();
                 if (automaticBallLaunchThread != null && automaticBallLaunchThread.isAlive())
                 {
                     automaticBallLaunchThread.interrupt();
@@ -158,7 +163,7 @@ public class OneManTeleOp extends Archimedes
                 dropBallDeployer();
             }
 
-            if (gamepad1.left_bumper)
+            if (gamepad1.left_bumper && gamepad1.right_trigger > 0.0)
                 startBallCollector();
             else
                 stopBallCollector();

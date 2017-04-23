@@ -17,10 +17,10 @@ public class RedParkingAngle extends Archimedes
         {
             startBallLauncher();
             drive(1.00, 675, 675);
-            launchBalls(2);
+            launchBalls();
             stopBallLauncher();
             drive(1.00, 675, 675);
-            turn(1.00, -160);
+            turn(1.00, -115);
             timeDrive(-0.65, 1500);
         }
     }

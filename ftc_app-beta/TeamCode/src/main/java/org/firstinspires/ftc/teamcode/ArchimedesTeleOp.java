@@ -100,7 +100,9 @@ public class ArchimedesTeleOp extends Archimedes
                         @Override public void run()
                         {
                             BallLauncherSpeedControlThread.setPriority(Thread.NORM_PRIORITY + 2);
-                            shouldRecordBallLauncherIntergal = false;
+                            shouldRecordBallLauncherIntegral = false;
+                            startBallCollector();
+
                             while (opModeIsActive())
                             {
                                 liftBallDeployer();
@@ -124,7 +126,8 @@ public class ArchimedesTeleOp extends Archimedes
                                 }
                             }
 
-                            shouldRecordBallLauncherIntergal = true;
+                            stopBallCollector();
+                            shouldRecordBallLauncherIntegral = true;
                             BallLauncherSpeedControlThread.setPriority(Thread.NORM_PRIORITY + 1);
                         }
                     });
@@ -139,6 +142,8 @@ public class ArchimedesTeleOp extends Archimedes
             }
             else if (gamepad2.right_trigger != 1.0 && gamepad2.right_trigger != 0.0)
             {
+                startBallCollector();
+
                 if (automaticBallLaunchThread != null && automaticBallLaunchThread.isAlive())
                 {
                     automaticBallLaunchThread.interrupt();
@@ -150,6 +155,8 @@ public class ArchimedesTeleOp extends Archimedes
             }
             else
             {
+                stopBallCollector();
+
                 if (automaticBallLaunchThread != null && automaticBallLaunchThread.isAlive())
                 {
                     automaticBallLaunchThread.interrupt();
@@ -159,7 +166,7 @@ public class ArchimedesTeleOp extends Archimedes
                 dropBallDeployer();
             }
 
-            if (gamepad2.left_bumper)
+            if (gamepad2.left_bumper || gamepad2.right_trigger != 0.0)
                 startBallCollector();
             else if (gamepad2.right_bumper)
                 reverseBallCollector();
