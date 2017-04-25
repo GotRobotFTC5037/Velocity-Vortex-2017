@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.enums.ButtonPusherPosition;
 
 @TeleOp(name = "One Man TeleOp")
+@Disabled
 public class OneManTeleOp extends Archimedes
 {
     private Thread automaticBallLaunchThread;

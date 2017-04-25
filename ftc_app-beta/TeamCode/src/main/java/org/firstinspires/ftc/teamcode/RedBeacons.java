@@ -26,7 +26,7 @@ public class RedBeacons extends Archimedes
 
         // Turn toward the beacon line, drive to it and then turn into it.
         turn(1.00, -37);
-        driveToLine(1.0, 1175, 1000);
+        driveToLine(1.0, 1175);
         turn(1.00, -53);
 
         // Press the beacon. Follows line up to wall, detects the color and presses correct button.
@@ -35,7 +35,7 @@ public class RedBeacons extends Archimedes
         // Turn toward the second line, drive towards it and turn into the line.
         drive(0.50, -125, 50);
         turn(1.00, 90);
-        driveToLine(1.00, 1175, 1000);
+        driveToLine(1.00, 1175);
         turn(1.00, -90);
 
         // Press the beacon. Follows line up to wall, detects the color and presses correct button.
@@ -57,7 +57,7 @@ public class RedBeacons extends Archimedes
         followLineToWall: while (opModeIsActive())
         {
             // Follow the line up to the beacon.
-            followLineToWall(0.05, DEFAULT_WALL_DISTANCE);
+            followLineToWall();
             correctHeading(0.6);
 
             // Detect if the robot is lined up with the beacon.
@@ -79,17 +79,17 @@ public class RedBeacons extends Archimedes
                 if (leftDetectedColor == BeaconColor.COLOR_RED
                         && rightDetectedColor != BeaconColor.COLOR_RED)
                 {
-                    pressBeaconButton(0.6, 500, ButtonPusherPosition.LEFT_POSITION);
+                    pressBeaconButton(0.6, ButtonPusherPosition.LEFT_POSITION);
                 }
                 else if (rightDetectedColor == BeaconColor.COLOR_RED
                         && leftDetectedColor != BeaconColor.COLOR_RED)
                 {
-                    pressBeaconButton(0.6, 500, ButtonPusherPosition.RIGHT_POSITION);
+                    pressBeaconButton(0.6, ButtonPusherPosition.RIGHT_POSITION);
                 }
                 else if (rightDetectedColor == BeaconColor.COLOR_BLUE
                         && leftDetectedColor == BeaconColor.COLOR_BLUE)
                 {
-                    pressBeaconButton(0.6, 500, ButtonPusherPosition.NEUTRAL_POSITION);
+                    pressBeaconButton(0.6, ButtonPusherPosition.NEUTRAL_POSITION);
                 }
                 else if (rightDetectedColor == BeaconColor.COLOR_RED)
                 {
@@ -98,11 +98,11 @@ public class RedBeacons extends Archimedes
                 }
                 else if (rightDetectedColor == BeaconColor.COLOR_BLUE)
                 {
-                    pressBeaconButton(0.6, 500, ButtonPusherPosition.LEFT_POSITION);
+                    pressBeaconButton(0.6, ButtonPusherPosition.LEFT_POSITION);
                 }
                 else if (leftDetectedColor == BeaconColor.COLOR_BLUE)
                 {
-                    pressBeaconButton(0.6, 500, ButtonPusherPosition.RIGHT_POSITION);
+                    pressBeaconButton(0.6, ButtonPusherPosition.RIGHT_POSITION);
                 }
                 else
                 {
@@ -132,7 +132,8 @@ public class RedBeacons extends Archimedes
                                 switch (leftDetectedColorCheck)
                                 {
                                     case COLOR_BLUE:
-                                        pressBeaconButton(0.65, 500, ButtonPusherPosition.RIGHT_POSITION);
+                                        pressBeaconButton(0.65,
+                                                ButtonPusherPosition.RIGHT_POSITION);
                                         break;
 
                                     default:
@@ -145,7 +146,7 @@ public class RedBeacons extends Archimedes
                                 switch (leftDetectedColorCheck)
                                 {
                                     case COLOR_RED:
-                                        pressBeaconButton(0.65, 500, ButtonPusherPosition.LEFT_POSITION);
+                                        pressBeaconButton(0.65, ButtonPusherPosition.LEFT_POSITION);
                                         break;
 
                                     default:

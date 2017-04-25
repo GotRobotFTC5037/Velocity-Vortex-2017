@@ -22,7 +22,7 @@ public class ArchimedesTeleOp extends Archimedes
         startArchimedes();
         startBallLauncher();
 
-        while (opModeIsActive())
+        while (opModeIsActive() && isGameActive())
         {
             double rightMotorPower;
             double leftMotorPower;
@@ -91,7 +91,7 @@ public class ArchimedesTeleOp extends Archimedes
             }
 
             // Gunner Controls
-            if (gamepad2.right_trigger == 1.0)
+            if (gamepad2.right_trigger == 1.0 && rightMotorPower == 0 && leftMotorPower == 0)
             {
                 if (automaticBallLaunchThread == null)
                 {
@@ -101,7 +101,6 @@ public class ArchimedesTeleOp extends Archimedes
                         {
                             BallLauncherSpeedControlThread.setPriority(Thread.NORM_PRIORITY + 2);
                             shouldRecordBallLauncherIntegral = false;
-                            startBallCollector();
 
                             while (opModeIsActive())
                             {
@@ -126,7 +125,6 @@ public class ArchimedesTeleOp extends Archimedes
                                 }
                             }
 
-                            stopBallCollector();
                             shouldRecordBallLauncherIntegral = true;
                             BallLauncherSpeedControlThread.setPriority(Thread.NORM_PRIORITY + 1);
                         }
@@ -140,10 +138,9 @@ public class ArchimedesTeleOp extends Archimedes
                     automaticBallLaunchThread.start();
                 }
             }
-            else if (gamepad2.right_trigger != 1.0 && gamepad2.right_trigger != 0.0)
+            else if (gamepad2.right_trigger != 1.0 && gamepad2.right_trigger != 0.0 &&
+                    rightMotorPower == 0 && leftMotorPower == 0)
             {
-                startBallCollector();
-
                 if (automaticBallLaunchThread != null && automaticBallLaunchThread.isAlive())
                 {
                     automaticBallLaunchThread.interrupt();
@@ -155,7 +152,6 @@ public class ArchimedesTeleOp extends Archimedes
             }
             else
             {
-                stopBallCollector();
 
                 if (automaticBallLaunchThread != null && automaticBallLaunchThread.isAlive())
                 {
@@ -197,18 +193,24 @@ public class ArchimedesTeleOp extends Archimedes
                 setLiftPower(-gamepad2.right_stick_y);
             }
 
-            if (areControlsReversed)
+            if (areControlsReversed && shouldRecordBallLauncherIntegral)
             {
                 getRightDriveMotor().setPower(-rightMotorPower);
                 getLeftDriveMotor().setPower(-leftMotorPower);
             }
-            else
+            else if (!areControlsReversed && shouldRecordBallLauncherIntegral)
             {
                 getRightDriveMotor().setPower(leftMotorPower);
                 getLeftDriveMotor().setPower(rightMotorPower);
             }
+            else if (!shouldRecordBallLauncherIntegral)
+            {
+                getRightDriveMotor().setPower(0.0);
+                getLeftDriveMotor().setPower(0.0);
+            }
         }
 
+        liftCapBallGrabber();
         BallLauncherSpeedControlThread.interrupt();
         BallLauncherSpeedControlThread.join();
     }

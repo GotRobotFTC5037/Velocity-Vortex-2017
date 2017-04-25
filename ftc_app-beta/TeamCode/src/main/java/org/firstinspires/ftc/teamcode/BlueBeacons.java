@@ -26,7 +26,7 @@ public class BlueBeacons extends Archimedes
 
         // Turn toward the beacon line, drive to it and then turn into it.
         turn(1.00, 42);
-        driveToLine(1.0, 1550, 1000);
+        driveToLine(1.0, 1550);
         turn(1.00, 47);
 
         // Press the beacon. Follows line up to wall, detects the color and presses correct button.
@@ -35,7 +35,7 @@ public class BlueBeacons extends Archimedes
         // Turn toward the second line, drive towards it and turn into the line.
         drive(0.50, -125, 50);
         turn(1.00, -90);
-        driveToLine(1.00, 1175, 1000);
+        driveToLine(1.00, 1175);
         turn(1.00, 90);
 
         // Press the beacon. Follows line up to wall, detects the color and presses correct button.
@@ -43,7 +43,7 @@ public class BlueBeacons extends Archimedes
 
         // Back away from the beacon as a way to show that everything has completed.
         drive(0.50, -650, 25);
-        turn(1.0, -45);
+        turn(1.0, -55);
         drive(1, -600, 0);
         timeDrive(-0.5, 5000);
 
@@ -57,7 +57,7 @@ public class BlueBeacons extends Archimedes
         followLineToWall: while (opModeIsActive())
         {
             // Follow the line up to the beacon.
-            followLineToWall(0.05, DEFAULT_WALL_DISTANCE);
+            followLineToWall();
             correctHeading(0.6);
 
             // Detect if the robot is lined up with the beacon.
@@ -79,17 +79,17 @@ public class BlueBeacons extends Archimedes
                 if (leftDetectedColor == BeaconColor.COLOR_BLUE
                         && rightDetectedColor != BeaconColor.COLOR_BLUE)
                 {
-                    pressBeaconButton(0.6, 500, ButtonPusherPosition.LEFT_POSITION);
+                    pressBeaconButton(0.6, ButtonPusherPosition.LEFT_POSITION);
                 }
                 else if (rightDetectedColor == BeaconColor.COLOR_BLUE
                         && leftDetectedColor != BeaconColor.COLOR_BLUE)
                 {
-                    pressBeaconButton(0.6, 500, ButtonPusherPosition.RIGHT_POSITION);
+                    pressBeaconButton(0.6, ButtonPusherPosition.RIGHT_POSITION);
                 }
                 else if (rightDetectedColor == BeaconColor.COLOR_RED
                         && leftDetectedColor == BeaconColor.COLOR_RED)
                 {
-                    pressBeaconButton(0.6, 500, ButtonPusherPosition.NEUTRAL_POSITION);
+                    pressBeaconButton(0.6, ButtonPusherPosition.NEUTRAL_POSITION);
                 }
                 else if (rightDetectedColor == BeaconColor.COLOR_BLUE)
                 {
@@ -97,11 +97,11 @@ public class BlueBeacons extends Archimedes
                 }
                 else if (rightDetectedColor == BeaconColor.COLOR_RED)
                 {
-                    pressBeaconButton(0.6, 500, ButtonPusherPosition.LEFT_POSITION);
+                    pressBeaconButton(0.6, ButtonPusherPosition.LEFT_POSITION);
                 }
                 else if (leftDetectedColor == BeaconColor.COLOR_RED)
                 {
-                    pressBeaconButton(0.6, 500, ButtonPusherPosition.RIGHT_POSITION);
+                    pressBeaconButton(0.6, ButtonPusherPosition.RIGHT_POSITION);
                 }
                 else
                 {
@@ -120,7 +120,9 @@ public class BlueBeacons extends Archimedes
                     // in the correct position after pressing the beacon.
                     if(rightDetectedColorCheck == rightDetectedColor
                             || rightDetectedColorCheck == BeaconColor.UNKNOWN
-                            || rightDetectedColorCheck == BeaconColor.ERROR)
+                            || rightDetectedColorCheck == BeaconColor.ERROR
+                            || rightDetectedColor == BeaconColor.UNKNOWN
+                            || rightDetectedColor == BeaconColor.ERROR)
                     {
                         setButtonPusherPosition(ButtonPusherPosition.RIGHT_POSITION);
                         leftDetectedColorCheck = getDetectedColor(ColorSensorPosition.LEFT_SENSOR);
@@ -131,7 +133,8 @@ public class BlueBeacons extends Archimedes
                                 switch (leftDetectedColorCheck)
                                 {
                                     case COLOR_RED:
-                                        pressBeaconButton(0.65, 500, ButtonPusherPosition.RIGHT_POSITION);
+                                        pressBeaconButton(0.65,
+                                                ButtonPusherPosition.RIGHT_POSITION);
                                         break;
 
                                     default:
@@ -144,7 +147,7 @@ public class BlueBeacons extends Archimedes
                                 switch (leftDetectedColorCheck)
                                 {
                                     case COLOR_BLUE:
-                                        pressBeaconButton(0.65, 500, ButtonPusherPosition.LEFT_POSITION);
+                                        pressBeaconButton(0.65, ButtonPusherPosition.LEFT_POSITION);
                                         break;
 
                                     default:
